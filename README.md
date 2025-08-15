@@ -1,2 +1,3 @@
-# automatedEmail
-too lazy for this sales outreach thing so i made this
+# Building Electricity Utility Tracker
+compare yhour building vs other buildings in term of electricity
+
