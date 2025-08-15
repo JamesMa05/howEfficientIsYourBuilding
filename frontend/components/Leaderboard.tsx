@@ -38,13 +38,15 @@ export const Leaderboard = () => {
     },[]);
     useEffect(()=>{
         getVisiblePages()
-    },[maxPages])
+    },[maxPages,currPage])
   return (
     <>
         <div>{maxPages}</div>
         <div>
             {visiblePages.map(page=>(<button key={page}>{page}</button>))}
-            <button onClick={getVisiblePages}>+</button> 
+            <button onClick={()=>{
+                setCurrPage(currPage+1)
+            }}>+</button> 
         </div>
         
 
