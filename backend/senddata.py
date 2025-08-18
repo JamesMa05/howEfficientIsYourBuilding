@@ -9,11 +9,11 @@ CORS(app,origins=["http://localhost:5173"])
 @app.route('/senddata', methods=['GET'])
 def senddata():
     page = int(request.args.get('page',0))
-    offset = page*100
+    offset = (page-1)*100
     connect = sqlite3.connect("nyc_energy_water.db")
-    df = pd.read_sql_query(f"SELECT * FROM nyc_energy_water LIMIT 100 OFFSET {offset} ", connect)
+    df = pd.read_sql_query("SELECT * FROM nyc_energy_water LIMIT 100 OFFSET ? ", connect, params=(offset,))
     connect.close()
-    return jsonify(df.to_dict(orient='records'))
+    return jsonify(df.fillna('null').to_dict(orient='records'))
 
 @app.route('/getlbcount')
 def getlbcount():

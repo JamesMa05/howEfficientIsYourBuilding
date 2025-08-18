@@ -1,0 +1,22 @@
+.leaderboard{
+    margin: 25px;
+    background-color:maroon;
+    width: 35vw;
+    height:70vh;
+    display:flex;
+    flex-direction: column;
+}
+.leaderboard .footer{ 
+    display:flex; 
+    margin-top:auto;  
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right:10px;
+}
+.leaderboard .page-number{
+    display: flex;
+    justify-content:space-between;
+}
+.leaderboard .leaderboard-list{
+    overflow-x:hidden;
+}

@@ -1,6 +1,6 @@
 import { useState, type Key } from 'react'
 import {Leaderboard} from '../components/Leaderboard.tsx'
-
+import LeftArrowButton from './assets/leftArrowButton.tsx'
 import './App.css'
 
 function App() {
@@ -19,10 +19,6 @@ function App() {
         <h3 style={{fontSize:"1.1rem",marginTop:"0.5vh ",fontWeight:"normal"}}>How does your building pair up?</h3>
         <input placeholder="Enter your building" className="search-building" onChange={(e) => setAddy(e.target.value)} onKeyDown={processKey}></input>
         <Leaderboard/>
-      </div>
-      
-      <div className="leaderboard" id="leaderboard">
-        <Leaderboard />
       </div>
     </>
   )
