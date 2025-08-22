@@ -1,5 +1,5 @@
 <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M13.1044 3C11.4609 3.54645 8.41812 5.06576 8 5.89165C8.94801 6.71754 10.2024 7.27641 11.0283 7.62002C11.4443 7.82701 11.8542 8.10023 13.1044 8.38174" stroke="white" stroke-width="2" stroke-linecap="round"/>
+<path d="M13.1044 3C11.4609 3.54645 8.41812 5.06576 8 5.89165C8.94801 6.71754 10.2024 7.27641 11.0283 7.62002C11.4443 7.82701 11.8542 8.10023 13.1044 8.38174" stroke="black" stroke-width="2" stroke-linecap="round"/>
 <g filter="url(#filter0_dd_1_373)">
 <ellipse cx="11" cy="6.5" rx="7" ry="6.5" fill="white" fill-opacity="0.23" shape-rendering="crispEdges"/>
 </g>

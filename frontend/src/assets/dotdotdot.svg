@@ -2,9 +2,9 @@
 <g filter="url(#filter0_d_5_33)">
 <ellipse cx="11" cy="6.5" rx="7" ry="6.5" fill="white" fill-opacity="0.23" shape-rendering="crispEdges"/>
 </g>
-<path d="M7.23674 5.92792L7.54919 6.86528" stroke="white" stroke-width="2" stroke-linecap="round"/>
-<path d="M11.6111 5.92792C11.6111 6.03103 11.6111 6.13414 11.6627 6.34192C11.7142 6.5497 11.8173 6.85903 11.9236 6.86528" stroke="white" stroke-width="2" stroke-linecap="round"/>
-<path d="M16.2979 5.92792V6.86528" stroke="white" stroke-width="2" stroke-linecap="round"/>
+<path d="M7.23674 5.92792L7.54919 6.86528" stroke="black" stroke-width="2" stroke-linecap="round"/>
+<path d="M11.6111 5.92792C11.6111 6.03103 11.6111 6.13414 11.6627 6.34192C11.7142 6.5497 11.8173 6.85903 11.9236 6.86528" stroke="black" stroke-width="2" stroke-linecap="round"/>
+<path d="M16.2979 5.92792V6.86528" stroke="black" stroke-width="2" stroke-linecap="round"/>
 <defs>
 <filter id="filter0_d_5_33" x="0" y="0" width="22" height="21" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
