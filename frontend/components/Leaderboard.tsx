@@ -70,6 +70,7 @@ export const Leaderboard = () => {
         const handleClickOutside = (event:MouseEvent) => {
             if (choosePageRef.current && !choosePageRef.current.contains(event.target as Node)) {
                 setChoosePage(false)
+                setGoPage(currPage)
             }
         };
         if (choosePage) {
@@ -103,7 +104,7 @@ export const Leaderboard = () => {
                 {cache[currPage]?.map((item,index)=>(
                     <div key={index} style={{display:"flex",fontFamily:"Permanent Marker"}}>
                         <div style={{width:"50px", marginLeft:"60px",textAlign:"left"}}>
-                            <PageNumIcon page={((currPage-1)*100)+index+1}/>
+                            <PageNumIcon page={((currPage-1)*100)+index+1} colour={"black"}/>
                         </div>
                         <div style={{width:"200px",marginLeft:"60px",textAlign:"center"}}>
                             {JSON.stringify(item.Borough).replace(/"/g,"")}                              
@@ -122,23 +123,45 @@ export const Leaderboard = () => {
             <div className="footer">
                 {currPage > 1 && <img src={maxLeftButton} onClick={()=>pageChange(1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
                 {currPage > 1 && <img src={leftButton} onClick={()=>pageChange(currPage-1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
+                {currPage == maxPages &&<img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(true)}></img>}
                 {visiblePages.map(page => (
                     page === currPage ? (
-                        <span style={{cursor:"pointer"}}onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
+                        <span style={{cursor:"pointer"}}onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} colour={"black"}></PageNumIcon></span>
                     ) : (
-                        <span style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
+                        <span style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} colour={"black"}></PageNumIcon></span>
                     )
                 ))}
                 {choosePage && 
-                <div ref={choosePageRef}>
+                <div ref={choosePageRef} style={{
+                    display:"flex",
+                    alignItems:"center",
+                    justifyContent:"center", 
+                    zIndex:"10",
+                    transform: 'translate(-50%, -50%)',
+                    top:'50%',
+                    left:'50%',
+                    position:"fixed",
+                    background:"#BDDDFC",
+                    border:"2px solid #384959",
+                    padding:"20px",
+                    flexDirection:"column",
+                    borderRadius:"0.5rem"}}>
                     <h1>Enter page number</h1>
-                    <input type="number" value={goPage} onChange={(e)=>setGoPage(parseInt(e.target.value))}onKeyDown={(e)=>{
+                    <input type="text" style={{margin:'0 auto'}}inputMode="numeric" value={goPage} onChange={(e)=>setGoPage(parseInt(e.target.value))}onKeyDown={(e)=>{
                         if(e.key==="Enter"){
-                            pageChange(goPage);
+                            if(goPage>maxPages){
+                                setGoPage(maxPages);
+                                pageChange(maxPages);
+                            }else if(goPage<1){
+                                setGoPage(1);
+                                pageChange(1);
+                            }else{
+                               pageChange(goPage); 
+                            }
                             setChoosePage(false);
-                    }}}></input>
+                    }}}></input> 
                 </div>}
-                <img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(true)}></img>
+                {currPage < maxPages &&<img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(!choosePage)}></img>}
                 {currPage < maxPages && <img src={rightButton} onClick={()=>pageChange(currPage+1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
                 {currPage < maxPages && <img src={maxRightButton} onClick={()=>pageChange(maxPages)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
             </div>
