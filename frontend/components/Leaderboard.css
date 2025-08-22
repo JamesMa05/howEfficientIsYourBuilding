@@ -1,10 +1,11 @@
 .leaderboard{
     margin: 25px;
-    background-color:maroon;
-    width: 35vw;
+    background-color:#BDDDFC;
+    width: 50vw;
     height:70vh;
     display:flex;
     flex-direction: column;
+    border: 5px solid #384959
 }
 .leaderboard .footer{ 
     display:flex; 
@@ -19,4 +20,10 @@
 }
 .leaderboard .leaderboard-list{
     overflow-x:hidden;
+}
+.leaderboard .column-describers{
+    margin-top:-20px;
+    margin-bottom: -15px;
+    margin-left:10px;
+    margin-right:10px;
 }

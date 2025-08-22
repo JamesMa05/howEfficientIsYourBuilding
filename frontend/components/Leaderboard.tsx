@@ -1,14 +1,16 @@
-import React ,{ useState,useEffect }from 'react'
+import React ,{ useState,useEffect,useRef }from 'react'
 import './Leaderboard.css'
 import leftButton from '../src/assets/leftButton.svg'
 import maxLeftButton from '../src/assets/maxLeftButton.svg'
 import PageNumIcon from '../src/assets/PageNum.tsx'
 import rightButton from '../src/assets/rightButton.svg'
 import maxRightButton from '../src/assets/maxRightButton.svg'
+import dotdotdot from '../src/assets/dotdotdot.svg'
 
 export const Leaderboard = () => {
     const [maxPages,setMaxPages] = useState<number>(1)
-
+    const [choosePage,setChoosePage] = useState<boolean>(false)
+    const [goPage,setGoPage] = useState<number>(1)
     const [currPage , setCurrPage] = useState<number>(1)
     const [visiblePages, setVisiblePages] = useState<number[]>([])
     const maxVisible = 5;
@@ -63,12 +65,58 @@ export const Leaderboard = () => {
         setCurrPage(page);
         await getPage(page)
     }
+    const choosePageRef = useRef<HTMLDivElement>(null)
+    useEffect(()=>{
+        const handleClickOutside = (event:MouseEvent) => {
+            if (choosePageRef.current && !choosePageRef.current.contains(event.target as Node)) {
+                setChoosePage(false)
+            }
+        };
+        if (choosePage) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [choosePage]);
+    useEffect(()=>{
+        getPage(1);
+    },[])
+    /* add zip code into search */
+    const goToLocation = (address:string) =>{
+        const encodedAddress = encodeURIComponent(address);
+        window.open(`https://www.google.com/maps/search/${encodedAddress}`)
+    }
   return (
     <>  
-        <div className="leaderboard">
+        <div className="leaderboard" style={{borderRadius:"1.5rem"}}>
+            <div className="header">
+                <div style={{display:"flex",alignItems:"center", justifyContent:"center",fontFamily:"Permanent Marker"}}>Leaderboard</div>
+                <div className="column-describers" id="column-describers" style={{fontFamily:"Permanent Marker",display:"flex", flexDirection:"row"}}>
+                    <p style={{width:"50px", marginLeft:"60px",textAlign:"left"}}>Rank</p>
+                    <p style={{width:"200px", marginLeft:"60px",textAlign:"center"}}>Borough</p>
+                    <p style={{width:"400px",textAlign:"center"}}>Address</p>
+                    <p style={{width:"150px",textAlign:"right"}}>Score</p>
+                </div>
+            </div>
             <div style={{overflowY:"scroll"}} className="leaderboard-list">
                 {cache[currPage]?.map((item,index)=>(
-                    <div key={index}>{index+1}{JSON.stringify(item.Borough)} and {JSON.stringify(item.Address_1)}</div>
+                    <div key={index} style={{display:"flex",fontFamily:"Permanent Marker"}}>
+                        <div style={{width:"50px", marginLeft:"60px",textAlign:"left"}}>
+                            <PageNumIcon page={((currPage-1)*100)+index+1}/>
+                        </div>
+                        <div style={{width:"200px",marginLeft:"60px",textAlign:"center"}}>
+                            {JSON.stringify(item.Borough).replace(/"/g,"")}                              
+                        </div>
+                        <div style={{width:"400px",textAlign:"center",cursor:"pointer"}} onClick={()=>{
+                            goToLocation(JSON.stringify(item.Address_1).replace(/"/g,""))
+                        }}>
+                            {JSON.stringify(item.Address_1).replace(/"/g,"")}
+                        </div>
+                        <div style={{width:"150px",textAlign:"right"}}>
+                            {JSON.stringify(item.ENERGY_STAR_Score).replace(/"/g,"")}
+                        </div>                        
+                </div>
                 ))} 
             </div>
             <div className="footer">
@@ -76,11 +124,21 @@ export const Leaderboard = () => {
                 {currPage > 1 && <img src={leftButton} onClick={()=>pageChange(currPage-1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
                 {visiblePages.map(page => (
                     page === currPage ? (
-                        <span onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
+                        <span style={{cursor:"pointer"}}onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
                     ) : (
-                        <span onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
+                        <span style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} ></PageNumIcon></span>
                     )
                 ))}
+                {choosePage && 
+                <div ref={choosePageRef}>
+                    <h1>Enter page number</h1>
+                    <input type="number" value={goPage} onChange={(e)=>setGoPage(parseInt(e.target.value))}onKeyDown={(e)=>{
+                        if(e.key==="Enter"){
+                            pageChange(goPage);
+                            setChoosePage(false);
+                    }}}></input>
+                </div>}
+                <img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(true)}></img>
                 {currPage < maxPages && <img src={rightButton} onClick={()=>pageChange(currPage+1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
                 {currPage < maxPages && <img src={maxRightButton} onClick={()=>pageChange(maxPages)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
             </div>
