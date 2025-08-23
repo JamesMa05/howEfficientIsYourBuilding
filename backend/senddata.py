@@ -26,10 +26,14 @@ def getlbcount():
 def searchalike():
     try:
         searchBar = request.get_json()
+        if not searchBar or 'query' not in searchBar:
+            return jsonify({'error': 'Invalid search query'}),400
         search_query = searchBar['query']
-
+        if search_query is None:
+            return jsonify({'error': 'Invalid search query'}),400
         connect = sqlite3.connect("nyc_energy_water.db")
-        df = pd.read_sql_query(f"SELECT * FROM nyc_energy_water WHERE Property_ID LIKE '%{search_query}%' LIMIT 10", connect)
+        query = "SELECT * FROM nyc_energy_water WHERE Address_1 LIKE ? LIMIT 10"
+        df = pd.read_sql_query(query,connect,params=[f"%{search_query}%"])
         connect.close()
         return jsonify(df.fillna('null').to_dict(orient='records'))
     except (sqlite3.Error,Exception) as e:

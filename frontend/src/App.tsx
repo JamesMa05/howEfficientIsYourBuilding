@@ -18,10 +18,10 @@ function App() {
       <div id='Enter your building' className='enter-building'>
         <div>Building Electricity Efficiency Checker</div>
         <h3 style={{fontSize:"1.1rem",marginTop:"0.5vh ",fontWeight:"normal"}}>How does your building pair up?</h3>
-        <input placeholder="Enter your building" className="search-building" onChange={(e) => setAddy(e.target.value)} onKeyDown={processKey} style={{border:"3px solid #384959"}}></input>
+        <SearchBar userInput={addy} onChange={setAddy}/>
         <Leaderboard/>
 
-        <SearchBar userInput={addy} onChange={setAddy}/>
+        
       </div>
 
       
