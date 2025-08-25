@@ -1,0 +1,9 @@
+.search-bar{
+    z-index: 10000 !important;
+}
+.search-bar-results{
+    z-index: 10001 !important;
+}
+.search-option{
+    z-index: 10002 !important;
+}

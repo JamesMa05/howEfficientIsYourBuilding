@@ -3,12 +3,13 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 export interface AddMapMarker{
-    addLocation: (id: number,lat: number, long: number) => void
+    addLocation: (id: string, lat: number, long: number) => void
 }
 
 export const Map = forwardRef<AddMapMarker,{}>((props, ref) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
+  const markersRef = useRef<Record<string,L.Marker>>({});
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
@@ -23,13 +24,13 @@ export const Map = forwardRef<AddMapMarker,{}>((props, ref) => {
       }
     };
   }, []);
+  
   useImperativeHandle(ref,()=>({
-    addLocation: (lat: number, long: number) => {
-        if(!mapRef.current || !mapInstance.current) return;
-        L.marker([lat, long]).addTo(mapInstance.current);
+    addLocation: (id:string, lat: number, long: number) => {
+        if(markersRef.current[id] || !mapInstance.current) {window.alert("Marker already exists"); return};
+        markersRef.current[id] = L.marker([lat, long]).addTo(mapInstance.current);
     }
   }));
-  
   return (
     <div ref={mapRef} id="map" 
     style={{ height: "400px", width: "100%", minHeight: "400px", minWidth: "300px", border: "1px solid #ccc" }} 
