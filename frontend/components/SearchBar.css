@@ -7,3 +7,14 @@
 .search-option{
     z-index: 10002 !important;
 }
+
+::-webkit-scrollbar {
+  background: transparent;
+  width:15px;
+}
+::-webkit-scrollbar-thumb {
+  background: #384959; /* or any other color you prefer */
+  border-radius: 10px;
+  background-clip:content-box;
+  border:2px solid transparent;
+}
