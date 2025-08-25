@@ -30,10 +30,12 @@ df['Electricity_Use'] = pd.to_numeric(df.get('electricity_use_grid_purchase_1', 
 df['Site_EUI'] = pd.to_numeric(df.get('site_eui_kbtu_ft', pd.Series(dtype=float)), errors='coerce')
 df['Water_Use'] = pd.to_numeric(df.get('water_use_all_water_sources', pd.Series(dtype=float)), errors='coerce')
 df['ENERGY_STAR_Score'] = pd.to_numeric(df.get('energy_star_score', pd.Series(dtype='Int64')), errors='coerce').astype('Int64')
+df['Latitude'] = pd.to_numeric(df.get('latitude', pd.Series(dtype=float)), errors='coerce')
+df['Longitude'] = pd.to_numeric(df.get('longitude', pd.Series(dtype=float)), errors='coerce')
 
 df = df[['BIN', 'Property_ID', 'City', 'Address_1', 'Postal_Code', 'Borough',
          'Year_Built', 'Primary_Property_Type', 'Natural_Gas_Use', 'Electricity_Use',
-         'Site_EUI', 'Water_Use', 'ENERGY_STAR_Score']]
+         'Site_EUI', 'Water_Use', 'ENERGY_STAR_Score','Latitude','Longitude']]
 
 
 df = df.sort_values(by="ENERGY_STAR_Score", ascending=False,na_position='last')

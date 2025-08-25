@@ -110,7 +110,7 @@ export const Leaderboard = () => {
                             {JSON.stringify(item.Borough).replace(/"/g,"")}                              
                         </div>
                         <div style={{width:"400px",textAlign:"center",cursor:"pointer"}} onClick={()=>{
-                            goToLocation(JSON.stringify(item.Address_1).replace(/"/g,""))
+                            goToLocation(JSON.stringify(item.Address_1).replace(/"/g,""));
                         }}>
                             {JSON.stringify(item.Address_1).replace(/"/g,"")}
                         </div>
@@ -125,11 +125,7 @@ export const Leaderboard = () => {
                 {currPage > 1 && <img src={leftButton} onClick={()=>pageChange(currPage-1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
                 {currPage == maxPages &&<img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(true)}></img>}
                 {visiblePages.map(page => (
-                    page === currPage ? (
-                        <span style={{cursor:"pointer"}}onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} colour={"black"}></PageNumIcon></span>
-                    ) : (
-                        <span style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon key={page} page={page} colour={"black"}></PageNumIcon></span>
-                    )
+                    <span key={page} style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon  page={page} colour={"black"}></PageNumIcon></span>
                 ))}
                 {choosePage && 
                 <div ref={choosePageRef} style={{
