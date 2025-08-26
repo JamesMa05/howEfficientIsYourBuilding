@@ -18,3 +18,15 @@
   background-clip:content-box;
   border:2px solid transparent;
 }
+.add-button:hover{
+  background-color: #15803D;
+}
+.add-button{
+  padding: 0.2rem;
+  border-radius: 0.3rem;
+  border: 3px solid #16A34A;
+  background-color: #16A34A;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left:0.5vw;
+}

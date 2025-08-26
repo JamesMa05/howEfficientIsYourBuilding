@@ -48,6 +48,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({userInput,onChange,addMarke
   return (
     <>
         <div className="search-bar"style={{position:"relative",zIndex:100}} ref={containerRef}>
+            <div style={{display:"flex"}}>
             <input  placeholder="Enter your building" className="search-building" style={{
             border: "3px solid #384959",
             marginTop: 0,
@@ -71,6 +72,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({userInput,onChange,addMarke
                 setDisplaySimilar(true);
                 onChange({...userInput,text:e.target.value});
             }} value={userInput.text}></input>
+            <span className="add-button" onClick={()=>{
+                if(userInput.selected!==null && userInput.text.length>0){
+                    addMarker();
+                }else{
+                    alert("Please enter or select a valid address!")
+                }
+            }}>ADD</span>
+            </div>
 
             {displaySimilar && <div className="search-bar-results" style={{overflowY:'scroll',maxHeight:"200px",position:"absolute",top:"100%", cursor:"pointer",zIndex:101}}>
                 {cache?.map((item,index)=>(

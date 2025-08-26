@@ -3,10 +3,13 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 export interface AddMapMarker{
-    addLocation: (id: string, lat: number, long: number) => void
+    addLocation: (id: string, lat: number, long: number, score: number) => void
+    removeLocation: (id:string) => void
 }
-
-export const Map = forwardRef<AddMapMarker,{}>((props, ref) => {
+export interface MarkerClick{ //shapes the structure of the isClicked state + address information
+  setIsClicked: (options: {click: boolean, name: string, score: number}) => void
+}
+export const Map = forwardRef<AddMapMarker,MarkerClick>(({setIsClicked}, ref) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string,L.Marker>>({});
@@ -26,9 +29,17 @@ export const Map = forwardRef<AddMapMarker,{}>((props, ref) => {
   }, []);
   
   useImperativeHandle(ref,()=>({
-    addLocation: (id:string, lat: number, long: number) => {
+    addLocation: (id:string, lat: number, long: number, score: number) => {
         if(markersRef.current[id] || !mapInstance.current) {window.alert("Marker already exists"); return};
         markersRef.current[id] = L.marker([lat, long]).addTo(mapInstance.current);
+        
+        markersRef.current[id].on('click', () => {
+          setIsClicked({click:true, name: id, score:score});
+        })
+    },
+    removeLocation:(id:string) => {
+      markersRef.current[id]?.remove();
+      delete markersRef.current[id];  
     }
   }));
   return (
