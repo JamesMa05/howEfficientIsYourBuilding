@@ -58,13 +58,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({userInput,onChange,addMarke
             width: "30vw",
             textAlign: "center"
             }} 
-            onKeyDown={(e)=>{
+            onKeyUp={(e)=>{
                 if(e.key === "Enter" && cache.length > 0){
                     setDisplaySimilar(false);
                     onChange({text: JSON.stringify(cache[0].Address_1).replace(/"/g,""),selected:cache[0]});
-                    if(confirm("Do you want to add a new marker?")){
-                        addMarker();
-                    }
                 }
             }}
             onClick={()=>setDisplaySimilar(true)}

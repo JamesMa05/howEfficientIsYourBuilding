@@ -27,7 +27,6 @@ function App() {
     <>
 
       <div id='Enter your building' className='enter-building' style={{display:'flex',flexDirection:'column',gap:"20px",alignItems:"center"}}>
-        <button onClick={()=>window.open}>asdf</button>
         <div>Building Electricity Efficiency Checker</div>
         <h3 style={{fontSize:"1.1rem",marginTop:"0.5vh ",fontWeight:"normal"}}>How does your building pair up?</h3>
         <span style={{zIndex:3}}><SearchBar userInput={addy} onChange={setAddy} addMarker={handleAddMarker}/></span>

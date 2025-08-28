@@ -53,6 +53,7 @@ export const Leaderboard = () => {
             const Response = await fetch(`http://127.0.0.1:5000/senddata?page=${page}`)
             if(!Response.ok){
                 throw new Error(`Error ${Response.status}: ${Response.statusText}`)
+                return alert("error")
             }
             const firstPage = await Response.json();
             setCache({...cache,[page]:firstPage})
