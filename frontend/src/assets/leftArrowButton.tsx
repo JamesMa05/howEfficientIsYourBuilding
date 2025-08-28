@@ -1,4 +1,3 @@
-import React from 'react'
 import leftButton from './leftButton.svg'
 
 export const LeftArrowButton = () => {

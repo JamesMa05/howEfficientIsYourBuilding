@@ -1,4 +1,4 @@
-import React ,{ useState,useEffect,useRef }from 'react'
+import { useState,useEffect,useRef }from 'react'
 import './Leaderboard.css'
 import leftButton from '../src/assets/leftButton.svg'
 import maxLeftButton from '../src/assets/maxLeftButton.svg'
@@ -48,12 +48,11 @@ export const Leaderboard = () => {
         if(cache[page]){
             return;
         }
-        await setCurrPage(page)
+        setCurrPage(page)
         try{
             const Response = await fetch(`http://127.0.0.1:5000/senddata?page=${page}`)
             if(!Response.ok){
                 throw new Error(`Error ${Response.status}: ${Response.statusText}`)
-                return alert("error")
             }
             const firstPage = await Response.json();
             setCache({...cache,[page]:firstPage})

@@ -1,5 +1,3 @@
-import React from 'react'
-
 type windowText = {
     text: string
 }
