@@ -1,11 +1,5 @@
 import { useState,useEffect,useRef }from 'react'
 import './Leaderboard.css'
-import leftButton from '../src/assets/leftButton.svg'
-import maxLeftButton from '../src/assets/maxLeftButton.svg'
-import PageNumIcon from '../src/assets/PageNum.tsx'
-import rightButton from '../src/assets/rightButton.svg'
-import maxRightButton from '../src/assets/maxRightButton.svg'
-import dotdotdot from '../src/assets/dotdotdot.svg'
 
 export const Leaderboard = () => {
     const [maxPages,setMaxPages] = useState<number>(1)
@@ -64,6 +58,11 @@ export const Leaderboard = () => {
     const pageChange = async(page:number) =>{
         setCurrPage(page);
         await getPage(page)
+
+        const headerElement = document.querySelector('.leaderboard .header');
+        if (headerElement) {
+            headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
     const choosePageRef = useRef<HTMLDivElement>(null)
     useEffect(()=>{
@@ -83,87 +82,256 @@ export const Leaderboard = () => {
     useEffect(()=>{
         getPage(1);
     },[])
-    /* add zip code into search */
+    
     const goToLocation = (address:string) =>{
         const encodedAddress = encodeURIComponent(address);
         window.open(`https://www.google.com/maps/search/${encodedAddress}`)
     }
   return (
-    <>  
-        <div className="leaderboard" style={{borderRadius:"1.5rem"}}>
-            <div className="header">
-                <div style={{display:"flex",alignItems:"center", justifyContent:"center",fontFamily:"Permanent Marker"}}>Leaderboard</div>
-                <div className="column-describers" id="column-describers" style={{fontFamily:"Permanent Marker",display:"flex", flexDirection:"row"}}>
-                    <p style={{width:"50px", marginLeft:"60px",textAlign:"left"}}>Rank</p>
-                    <p style={{width:"200px", marginLeft:"60px",textAlign:"center"}}>Borough</p>
-                    <p style={{width:"400px",textAlign:"center"}}>Address</p>
-                    <p style={{width:"150px",textAlign:"right"}}>Score</p>
-                </div>
-            </div>
-            <div style={{overflowY:"scroll"}} className="leaderboard-list">
-                {cache[currPage]?.map((item,index)=>(
-                    <div key={index} style={{display:"flex",fontFamily:"Permanent Marker"}}>
-                        <div style={{width:"50px", marginLeft:"60px",textAlign:"left"}}>
-                            <PageNumIcon page={((currPage-1)*100)+index+1} colour={"black"}/>
-                        </div>
-                        <div style={{width:"200px",marginLeft:"60px",textAlign:"center"}}>
-                            {JSON.stringify(item.Borough).replace(/"/g,"")}                              
-                        </div>
-                        <div style={{width:"400px",textAlign:"center",cursor:"pointer"}} onClick={()=>{
-                            goToLocation(JSON.stringify(item.Address_1).replace(/"/g,""));
-                        }}>
-                            {JSON.stringify(item.Address_1).replace(/"/g,"")}
-                        </div>
-                        <div style={{width:"150px",textAlign:"right"}}>
-                            {JSON.stringify(item.ENERGY_STAR_Score).replace(/"/g,"")}
-                        </div>                        
-                </div>
-                ))} 
-            </div>
-            <div className="footer">
-                {currPage > 1 && <img src={maxLeftButton} onClick={()=>pageChange(1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
-                {currPage > 1 && <img src={leftButton} onClick={()=>pageChange(currPage-1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
-                {currPage == maxPages &&<img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(true)}></img>}
-                {visiblePages.map(page => (
-                    <span key={page} style={{cursor:"pointer"}} onClick={() => pageChange(page)}><PageNumIcon  page={page} colour={"black"}></PageNumIcon></span>
-                ))}
-                {choosePage && 
-                <div ref={choosePageRef} style={{
-                    display:"flex",
-                    alignItems:"center",
-                    justifyContent:"center", 
-                    zIndex:"10",
-                    transform: 'translate(-50%, -50%)',
-                    top:'50%',
-                    left:'50%',
-                    position:"fixed",
-                    background:"#BDDDFC",
-                    border:"2px solid #384959",
-                    padding:"20px",
-                    flexDirection:"column",
-                    borderRadius:"0.5rem"}}>
-                    <h1>Enter page number</h1>
-                    <input type="text" style={{margin:'0 auto'}}inputMode="numeric" value={goPage} onChange={(e)=>setGoPage(parseInt(e.target.value))}onKeyDown={(e)=>{
-                        if(e.key==="Enter"){
-                            if(goPage>maxPages){
-                                setGoPage(maxPages);
-                                pageChange(maxPages);
-                            }else if(goPage<1){
-                                setGoPage(1);
-                                pageChange(1);
-                            }else{
-                               pageChange(goPage); 
-                            }
-                            setChoosePage(false);
-                    }}}></input> 
-                </div>}
-                {currPage < maxPages &&<img src={dotdotdot} style={{display:"inline-block", cursor:"pointer", width:"40px",height:"40px"}} onClick={()=>setChoosePage(!choosePage)}></img>}
-                {currPage < maxPages && <img src={rightButton} onClick={()=>pageChange(currPage+1)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
-                {currPage < maxPages && <img src={maxRightButton} onClick={()=>pageChange(maxPages)}alt="" style={{display:"inline-block", cursor:"pointer", width:"40px",height:"36px"}}/>}
-            </div>
-        </div>
+   <>  
+       <div className="leaderboard">
+           <div className="header">
+               <h3 style={{
+                   fontSize:"1.75rem",
+                   fontWeight:"700", 
+                   color:"#111827",
+                   margin: 0,
+                   marginBottom: "0.5rem",
+                   textAlign:"center"
+               }}>
+                   NYC Building Efficiency Leaderboard
+               </h3>
+               <p style={{
+                   fontSize:"1rem",
+                   color:"#6b7280",
+                   margin: 0,
+                   textAlign:"center"
+               }}>
+                   Top performing buildings across New York City
+               </p>
+           </div>
 
-    </>
-    
-  )
+           <div className="column-describers">
+               <div style={{width:"80px", textAlign:"left", fontWeight:"600"}}>Rank</div>
+               <div style={{width:"180px", marginLeft:"20px", textAlign:"left", fontWeight:"600"}}>Borough</div>
+               <div style={{flex: 1, textAlign:"left", fontWeight:"600"}}>Address</div>
+               <div style={{width:"100px", textAlign:"center", fontWeight:"600"}}>Score</div>
+           </div>
+
+           <div className="leaderboard-list">
+               {cache[currPage]?.map((item,index)=>(
+                   <div key={index} className="leaderboard-item">
+                       <div style={{width:"80px", textAlign:"left", display:"flex", alignItems:"center"}}>
+                           <span style={{
+                               display:"inline-flex",
+                               alignItems:"center",
+                               justifyContent:"center",
+                               width:"32px",
+                               height:"32px",
+                               backgroundColor:"#3b82f6",
+                               color:"white",
+                               borderRadius:"50%",
+                               fontWeight:"600",
+                               fontSize:"0.875rem"
+                           }}>
+                               {((currPage-1)*100)+index+1}
+                           </span>
+                       </div>
+                       <div style={{width:"180px", marginLeft:"20px", textAlign:"left", fontSize:"0.875rem", color:"#374151"}}>
+                           {JSON.stringify(item.Borough).replace(/"/g,"")}                              
+                       </div>
+                       <div style={{flex: 1, textAlign:"left", cursor:"pointer", fontSize:"0.875rem", color:"#111827", fontWeight:"500"}} 
+                            onClick={()=>{goToLocation(JSON.stringify(item.Address_1).replace(/"/g,""));}}>
+                           {JSON.stringify(item.Address_1).replace(/"/g,"")}
+                       </div>
+                       <div style={{width:"100px", textAlign:"center"}}>
+                           <span style={{
+                               display:"inline-flex",
+                               alignItems:"center",
+                               justifyContent:"center",
+                               backgroundColor:"#dcfce7",
+                               color:"#166534",
+                               borderRadius:"9999px",
+                               padding:"0.25rem 0.75rem",
+                               fontSize:"0.75rem",
+                               fontWeight:"600"
+                           }}>
+                               {JSON.stringify(item.ENERGY_STAR_Score).replace(/"/g,"")}
+                           </span>
+                       </div>                        
+                   </div>
+               ))} 
+           </div>
+
+           <div className="footer">
+               {currPage > 1 && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           pageChange(1);
+                       }}
+                       style={{
+                           cursor:"pointer",
+                           padding:"0.5rem 0.75rem",
+                           borderRadius:"0.375rem",
+                           backgroundColor: "white",
+                           color: "#374151",
+                           border: "1px solid #d1d5db",
+                           fontWeight:"500",
+                           minWidth:"40px",
+                           textAlign:"center",
+                           transition: "all 0.2s",
+                           fontSize: "0.875rem"
+                       }}
+                   >
+                       ≪
+                   </button>
+               )}
+               
+               {currPage > 1 && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           pageChange(currPage-1);
+                       }}
+                       style={{
+                           cursor:"pointer",
+                           padding:"0.5rem 0.75rem",
+                           borderRadius:"0.375rem",
+                           backgroundColor: "white",
+                           color: "#374151",
+                           border: "1px solid #d1d5db",
+                           fontWeight:"500",
+                           minWidth:"40px",
+                           textAlign:"center",
+                           transition: "all 0.2s",
+                           fontSize: "0.875rem"
+                       }}
+                   >
+                       ‹
+                   </button>
+               )}
+               
+               {visiblePages.map(page => (
+                   <button 
+                       key={page}
+                       onClick={(e) => {
+                           e.preventDefault();
+                           pageChange(page);
+                       }}
+                       style={{
+                           cursor:"pointer",
+                           padding:"0.5rem 0.75rem",
+                           borderRadius:"0.375rem",
+                           backgroundColor: page === currPage ? "#3b82f6" : "white",
+                           color: page === currPage ? "white" : "#374151",
+                           border: "1px solid #d1d5db",
+                           fontWeight:"500",
+                           minWidth:"40px",
+                           textAlign:"center",
+                           transition: "all 0.2s"
+                       }}
+                   >
+                       {page}
+                   </button>
+               ))}
+               
+               <button 
+                   onClick={(e) => {
+                       e.preventDefault();
+                       setChoosePage(true);
+                   }}
+                   style={{
+                       cursor:"pointer",
+                       padding:"0.5rem 0.75rem",
+                       borderRadius:"0.375rem",
+                       backgroundColor: "white",
+                       color: "#374151",
+                       border: "1px solid #d1d5db",
+                       fontWeight:"500",
+                       minWidth:"40px",
+                       textAlign:"center",
+                       transition: "all 0.2s",
+                       fontSize: "0.875rem"
+                   }}
+               >
+                   ...
+               </button>
+               
+               {currPage < maxPages && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           pageChange(currPage+1);
+                       }}
+                       style={{
+                           cursor:"pointer",
+                           padding:"0.5rem 0.75rem",
+                           borderRadius:"0.375rem",
+                           backgroundColor: "white",
+                           color: "#374151",
+                           border: "1px solid #d1d5db",
+                           fontWeight:"500",
+                           minWidth:"40px",
+                           textAlign:"center",
+                           transition: "all 0.2s",
+                           fontSize: "0.875rem"
+                       }}
+                   >
+                       
+                   </button>
+               )}
+               
+               {currPage < maxPages && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           pageChange(maxPages);
+                       }}
+                       style={{
+                           cursor:"pointer",
+                           padding:"0.5rem 0.75rem",
+                           borderRadius:"0.375rem",
+                           backgroundColor: "white",
+                           color: "#374151",
+                           border: "1px solid #d1d5db",
+                           fontWeight:"500",
+                           minWidth:"40px",
+                           textAlign:"center",
+                           transition: "all 0.2s",
+                           fontSize: "0.875rem"
+                       }}>
+                   </button>
+               )}
+               
+               {choosePage && (
+                   <div className="page-input-modal">
+                       <h2>Enter page number</h2>
+                       <input 
+                           type="number" 
+                           value={goPage} 
+                           onChange={(e)=>setGoPage(parseInt(e.target.value) || 1)}
+                           onKeyDown={(e)=>{
+                               if(e.key==="Enter"){
+                                   if(goPage>maxPages){
+                                       setGoPage(maxPages);
+                                       pageChange(maxPages);
+                                   }else if(goPage<1){
+                                       setGoPage(1);
+                                       pageChange(1);
+                                   }else{
+                                      pageChange(goPage); 
+                                   }
+                                   setChoosePage(false);
+                               }
+                           }}
+                       />
+                   </div>
+               )}
+           </div>
+       </div>
+   </>
+)
 }
+
+export default Leaderboard

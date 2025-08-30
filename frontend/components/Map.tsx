@@ -1,5 +1,6 @@
 import  { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import L from "leaflet";
+import 'leaflet.awesome-markers';
 import "leaflet/dist/leaflet.css";
 
 export interface AddMapMarker{
@@ -31,8 +32,13 @@ export const Map = forwardRef<AddMapMarker,MarkerClick>(({setIsClicked}, ref) =>
   useImperativeHandle(ref,()=>({
     addLocation: (id:string, lat: number, long: number, score: number) => {
         if(markersRef.current[id] || !mapInstance.current) {window.alert("Marker already exists"); return};
-        markersRef.current[id] = L.marker([lat, long]).addTo(mapInstance.current);
-        
+        const color = score >= 85 ? 'green' : score >= 70 ? 'yellow' : score >= 55 ? 'orange' : score < 55 ? 'red' : 'gray';
+        // @ts-ignore
+        const markerColor = L.AwesomeMarkers.icon({
+          icon: 'circle',
+          markerColor: color,
+        })
+        markersRef.current[id] = L.marker([lat, long],{icon: markerColor}).addTo(mapInstance.current);
         markersRef.current[id].on('click', () => {
           setIsClicked({click:true, name: id, score:score});
         })

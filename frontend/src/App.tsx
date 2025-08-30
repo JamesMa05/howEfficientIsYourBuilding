@@ -13,6 +13,7 @@ function App() {
     name: "",
     score: null
   }) // function keeps track of whether a marker has been clicked + helps display info
+  const [incorrectAddy,setIncorrectAddy] = useState<boolean>(false)
   const markerRef = useRef<AddMapMarker>(null)
   const handleAddMarker = () =>{
     if(!markerRef.current) return
@@ -23,49 +24,102 @@ function App() {
     if(!markerRef.current) return
     markerRef.current.removeLocation(isClicked.name)
   }
-  return (
-    <>
+return (
+  <>
+    <nav style={{
+      backgroundColor: 'white',
+      borderBottom: '1px solid #e5e7eb',
+      padding: '1rem 2rem',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+    }}>
+    </nav>
 
-      <div id='Enter your building' className='enter-building' style={{display:'flex',flexDirection:'column',gap:"20px",alignItems:"center"}}>
-        <div>Building Electricity Efficiency Checker</div>
-        <h3 style={{fontSize:"1.1rem",marginTop:"0.5vh ",fontWeight:"normal"}}>How does your building pair up?</h3>
-        <span style={{zIndex:3}}><SearchBar userInput={addy} onChange={setAddy} addMarker={handleAddMarker}/></span>
-        {isClicked.click && 
-          <div style={{
-            border: "3px solid #384959",
-            backgroundColor: "#BDDDFC",
-            marginTop: 0,
-            borderRadius: "0.3rem",
-            padding: "1.5rem",
-            fontSize: "1rem",
-            width: "43vw",
-            display:"flex",
-            justifyContent:"space-between"
-            }} >
-            <div style={{fontSize:"1.2rem",fontFamily:"Permanent Marker"}}>{isClicked.name} </div>
-            <div style={{fontSize:"1.2rem",fontFamily:"Permanent Marker"}}>{isClicked.score} 
-              <span onClick={()=>{handleRemoveMarker();setIsClicked({click:false,name:"",score:null})}}style={{width:"30px",height:"20px",marginLeft:"10px",backgroundColor:"red",padding:"7px", borderRadius:"0.5rem",cursor:"pointer"}}>
-                X
-              </span>
-            </div>
-            
-          </div>}
-        <div style={{
-          margin:"10px",
-          height:"20vh",
-          width:"45vw",
-          position:"relative",
-          zIndex:2
-        }}><Map ref={markerRef} setIsClicked={setIsClicked}/></div>
-        
-        <div style={{
-          marginTop:"25vh"
-        }}><Leaderboard/></div>
-      </div>
-
+    <div className='enter-building' style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      minHeight: '100vh',
+      padding: '2rem',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      width: '100%'
+    }}>
+      <h1 className="main-title">NYC Building Energy Efficiency Checker</h1>
+      <p className="subtitle">
+        Discover and compare the energy performance of buildings across New York City. 
+      </p>
       
-    </>
-  )
+      <div style={{zIndex:10000, marginBottom: '2rem', width: '100%', maxWidth: '600px'}}>
+        <SearchBar userInput={addy} onChange={setAddy} notValid = {setIncorrectAddy} addMarker={handleAddMarker}/>
+        <span style={{alignItems:"center",justifyContent:"center",color:"red",fontSize:"1.2rem",display:'flex'}}>{incorrectAddy && <div>Please enter a valid address</div>}</span>
+      </div>
+      
+      {isClicked.click && 
+        <div className="building-info-card" style={{ 
+          width: "100%", 
+          maxWidth: "600px",
+          marginBottom: "2rem" 
+        }}>
+           <div style={{fontSize:"1.2rem"}}>{isClicked.name} </div>
+          <div><span  style={{fontSize:"1.2rem",justifyContent:"center",backgroundColor:"#dcfce7",color:"#166534",borderRadius:"9999px",padding:"0.25rem 0.75rem",fontWeight:"600"}}>{isClicked.score} </span>
+            <span onClick={()=>{handleRemoveMarker();setIsClicked({click:false,name:"",score:null})}} style={{marginLeft:"5px",cursor:"pointer",fontSize:"1.2rem",justifyContent:"center",backgroundColor:"#ef4444",color:"white",borderRadius:"9999px",padding:"0.25rem 0.75rem",fontWeight:"600"}}>
+              X
+            </span>
+          </div>
+        </div>
+      }
+
+      <div style={{ 
+        width: "100%", 
+        maxWidth: "900px", 
+        background: "white",
+        borderRadius: "0.5rem",
+        padding: "1.5rem",
+        boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+        border: "1px solid #e5e7eb",
+        marginBottom: "3rem"
+      }}>
+        <h2 style={{ 
+          fontSize: "1.5rem", 
+          fontWeight: "600", 
+          color: "#111827", 
+          textAlign: "center",
+          margin: "0 0 0.5rem 0"
+        }}>
+          Interactive Energy Map
+        </h2>
+        <p style={{
+          color: "#6b7280",
+          textAlign: "center",
+          margin: "0 0 1.5rem 0",
+          fontSize: "0.875rem"
+        }}>
+          Explore building efficiency ratings across NYC boroughs
+        </p>
+        <Map ref={markerRef} setIsClicked={setIsClicked}/>
+        <footer>
+          <div style={{display:"flex",gap:"1rem",fontFamily:"sans-serif"}}>
+            <span>Key:</span>
+            <span><span style={{display:"inline-block",width:12,height:12,borderRadius:"50%",background:"green",marginRight:6}}/> ≥ 85</span>
+            <span><span style={{display:"inline-block",width:12,height:12,borderRadius:"50%",background:"gold",marginRight:6}}/>84-70</span>
+            <span><span style={{display:"inline-block",width:12,height:12,borderRadius:"50%",background:"orange",marginRight:6}}/>69-55</span>
+            <span><span style={{display:"inline-block",width:12,height:12,borderRadius:"50%",background:"red",marginRight:6}}/>&lt; 55</span>
+            <span><span style={{display:"inline-block",width:12,height:12,borderRadius:"50%",background:"gray",marginRight:6}}/>Null</span>
+          </div>
+        </footer>
+      </div>
+      
+      <div style={{ 
+        width: "100%", 
+        maxWidth: "1000px", 
+        display: "flex", 
+        justifyContent: "center" 
+      }}>
+        <Leaderboard/>
+      </div>
+    </div>
+  </>
+)
 }
 
 export default App
