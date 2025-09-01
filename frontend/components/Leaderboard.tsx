@@ -278,7 +278,7 @@ export const Leaderboard = () => {
                            fontSize: "0.875rem"
                        }}
                    >
-                       
+                       ›
                    </button>
                )}
                
@@ -301,10 +301,11 @@ export const Leaderboard = () => {
                            transition: "all 0.2s",
                            fontSize: "0.875rem"
                        }}>
+                       ≫
                    </button>
                )}
                
-               {choosePage && (
+               {choosePage  && (
                    <div className="page-input-modal">
                        <h2>Enter page number</h2>
                        <input 
