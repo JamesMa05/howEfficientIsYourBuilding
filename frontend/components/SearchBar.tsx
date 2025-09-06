@@ -14,13 +14,14 @@ type SearchBarProps = {
 export const SearchBar: React.FC<SearchBarProps> = ({userInput,onChange,addMarker,notValid}) => {
     const [cache,setCache] = useState<any[]>([])
     const [displaySimilar,setDisplaySimilar] = useState<boolean>(false)
+    const API_BASE = import.meta.env.PROD ? 'https://howefficientisyourbuildingapi.onrender.com' : 'http://127.0.0.1:5000';
     useEffect(()=>{
         if(userInput.text.trim() === ""){
             setCache([])
             return;
         }
         const timeout = setTimeout(() => {
-            fetch('http://127.0.0.1:5000/searchalike',{
+            fetch(`${API_BASE}/searchalike`,{
             method:'POST',headers: {'Content-Type':'application/json'},body: JSON.stringify({query: userInput.text})
             }).then(res=>res.json())
             .then(data=>setCache(data))

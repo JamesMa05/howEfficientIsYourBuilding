@@ -9,11 +9,12 @@ export const Leaderboard = () => {
     const [visiblePages, setVisiblePages] = useState<number[]>([])
     const maxVisible = 5;
 
+    const API_BASE = import.meta.env.PROD ? 'https://howefficientisyourbuildingapi.onrender.com' : 'http://127.0.0.1:5000';
     const [cache,setCache] = useState<{[key:number]:any[]}>({})
 
     const getMaxPages = async () =>{
             try{
-                const count = await fetch('http://127.0.0.1:5000/getlbcount').then(res=>res.json())
+                const count = await fetch(`${API_BASE}/getlbcount`).then(res=>res.json())
                 setMaxPages(count.count)
             }catch(err){
                 console.log(err)
@@ -44,7 +45,7 @@ export const Leaderboard = () => {
         }
         setCurrPage(page)
         try{
-            const Response = await fetch(`http://127.0.0.1:5000/senddata?page=${page}`)
+            const Response = await fetch(`${API_BASE}/senddata?page=${page}`)
             if(!Response.ok){
                 throw new Error(`Error ${Response.status}: ${Response.statusText}`)
             }
