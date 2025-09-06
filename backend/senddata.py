@@ -3,16 +3,22 @@ from flask_cors import CORS
 import sqlite3
 import pandas as pd
 import math
-
-from flask_limiter.util import get_remote_address
 import logging
+import os
 
 app = Flask(__name__)
-CORS(app,origins=["http://localhost:5173"])
+cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
+if FRONTEND_ORIGIN:
+    cors_origins.append(FRONTEND_ORIGIN)
 
-
+CORS(app,origins=cors_origins)
+    
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "nyc_energy_water.db")
 
 @app.route('/senddata', methods=['GET'])
 def senddata():
@@ -28,7 +34,7 @@ def senddata():
         return jsonify({'error': 'Invalid page number'}),400
     offset = (page-1)*100
     try:
-        with sqlite3.connect("nyc_energy_water.db") as connect:
+        with sqlite3.connect(DB_PATH) as connect:
             df = pd.read_sql_query("SELECT * FROM nyc_energy_water LIMIT ? OFFSET ? ", connect, params=(100,offset))
             return jsonify(df.fillna('null').to_dict(orient='records'))
     except sqlite3.Error as e:
@@ -42,7 +48,7 @@ def senddata():
 @app.route('/getlbcount')
 def getlbcount():
     try:
-        with sqlite3.connect("nyc_energy_water.db") as connect:
+        with sqlite3.connect(DB_PATH) as connect:
             df = pd.read_sql_query("SELECT COUNT(*) as total FROM nyc_energy_water ", connect)
             count = math.ceil(df.iloc[0]['total']/100)
             return jsonify({"count":count})
@@ -67,7 +73,7 @@ def searchalike():
         if len(search_query) > 100:
             return jsonify({'error': 'Search query too long'}),400
         
-        with sqlite3.connect("nyc_energy_water.db") as connect:
+        with sqlite3.connect(DB_PATH) as connect:
             query = "SELECT * FROM nyc_energy_water WHERE Address_1 LIKE ? LIMIT 10"
             search_params = f"%{search_query}%"
             df = pd.read_sql_query(query,connect,params=[search_params])
@@ -86,5 +92,4 @@ def after_request(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     return response
 
-if(__name__ == '__main__'):
-    app.run(debug=False)
+
