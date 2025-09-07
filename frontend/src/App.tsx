@@ -60,7 +60,10 @@ return (
           maxWidth: "600px",
           marginBottom: "2rem" 
         }}>
-           <div style={{fontSize:"1.2rem"}}>{isClicked.name} </div>
+           <div style={{fontSize:"1.2rem"}} onClick={()=>{
+            const encodedAddress = encodeURIComponent(isClicked.name);
+            window.open(`https://www.google.com/maps/search/${encodedAddress}`,"_blank","noopener noreferrer")
+            }}>{isClicked.name} </div>
           <div><span  style={{fontSize:"1.2rem",justifyContent:"center",backgroundColor:"#dcfce7",color:"#166534",borderRadius:"9999px",padding:"0.25rem 0.75rem",fontWeight:"600"}}>{isClicked.score} </span>
             <span onClick={()=>{handleRemoveMarker();setIsClicked({click:false,name:"",score:null})}} style={{marginLeft:"5px",cursor:"pointer",fontSize:"1.2rem",justifyContent:"center",backgroundColor:"#ef4444",color:"white",borderRadius:"9999px",padding:"0.25rem 0.75rem",fontWeight:"600"}}>
               X

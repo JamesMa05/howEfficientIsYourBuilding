@@ -86,7 +86,7 @@ export const Leaderboard = () => {
     
     const goToLocation = (address:string) =>{
         const encodedAddress = encodeURIComponent(address);
-        window.open(`https://www.google.com/maps/search/${encodedAddress}`)
+        window.open(`https://www.google.com/maps/search/${encodedAddress}`,'_blank','noopener,noreferrer')
     }
   return (
    <>  
