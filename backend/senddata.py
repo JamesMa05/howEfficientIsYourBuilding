@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
+FRONTEND_ORIGIN = "https://howefficientisyourbuilding.onrender.com"
 if FRONTEND_ORIGIN:
     cors_origins.append(FRONTEND_ORIGIN)
 
@@ -59,24 +59,17 @@ def getlbcount():
         logger.error(f"Unexpected error in getlbcount: {e}")
         return jsonify({'error': 'An error occurred'}), 500
 
-@app.route('/searchalike',methods=['POST'])
+@app.route('/searchalike',methods=['GET'])
 def searchalike():
     try:
-        searchBar = request.get_json()
-        if not searchBar or 'query' not in searchBar:
+        searchBar = request.args.get('query','').strip()
+        if not searchBar or len(searchBar)>100:
             return jsonify({'error': 'Invalid search query'}),400
-        search_query = searchBar['query']
-        if not search_query or not isinstance(search_query, str):
-            return jsonify({'error': 'Invalid search query'}),400
-        if len(search_query.strip()) == 0:
-            return jsonify({'error': 'Invalid search query'}),400
-        if len(search_query) > 100:
-            return jsonify({'error': 'Search query too long'}),400
         
         with sqlite3.connect(DB_PATH) as connect:
             query = "SELECT * FROM nyc_energy_water WHERE Address_1 LIKE ? LIMIT 10"
-            search_params = f"%{search_query}%"
-            df = pd.read_sql_query(query,connect,params=[search_params])
+            search_params = f"%{searchBar}%"
+            df = pd.read_sql_query(query,connect,params=(search_params,))
             return jsonify(df.fillna('null').to_dict(orient='records'))
     except sqlite3.Error as e:
         logger.error(f"Database error in searchalike: {e}")
