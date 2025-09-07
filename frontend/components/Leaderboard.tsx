@@ -86,7 +86,9 @@ export const Leaderboard = () => {
     
     const goToLocation = (address:string) =>{
         const encodedAddress = encodeURIComponent(address);
-        window.open(`https://www.google.com/maps/search/${encodedAddress}`,'_blank','noopener,noreferrer')
+        if(window.confirm("Would you like to view this building on Google Maps?")){
+            window.open(`https://www.google.com/maps/search/${encodedAddress}`,'_blank','noopener,noreferrer')
+        }
     }
   return (
    <>  
