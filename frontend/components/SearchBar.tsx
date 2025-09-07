@@ -21,11 +21,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({userInput,onChange,addMarke
             return;
         }
         const timeout = setTimeout(() => {
-            fetch(`${API_BASE}/searchalike`,{
-            method:'POST',headers: {'Content-Type':'application/json'},body: JSON.stringify({query: userInput.text})
-            }).then(res=>res.json())
+            fetch(`${API_BASE}/searchalike?query=${encodeURIComponent(userInput.text)}`)
+            .then(res=>res.json())
             .then(data=>setCache(data))
-            .catch(err=>prompt(err));
+            .catch(()=>console.error("An error occured"));
         }, 150)
         
         return () => clearTimeout(timeout)
