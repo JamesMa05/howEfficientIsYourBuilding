@@ -4,7 +4,7 @@ import './Leaderboard.css'
 export const Leaderboard = () => {
     const [maxPages,setMaxPages] = useState<number>(1)
     const [choosePage,setChoosePage] = useState<boolean>(false)
-    const [goPage,setGoPage] = useState<number>(1)
+    const [goPage,setGoPage] = useState<string>("")
     const [currPage , setCurrPage] = useState<number>(1)
     const [visiblePages, setVisiblePages] = useState<number[]>([])
     const maxVisible = 5;
@@ -70,7 +70,7 @@ export const Leaderboard = () => {
         const handleClickOutside = (event:MouseEvent) => {
             if (choosePageRef.current && !choosePageRef.current.contains(event.target as Node)) {
                 setChoosePage(false)
-                setGoPage(currPage)
+                setGoPage(currPage.toString())
             }
         };
         if (choosePage) {
@@ -120,7 +120,29 @@ export const Leaderboard = () => {
                <div style={{flex: 1, textAlign:"left", fontWeight:"600"}}>Address</div>
                <div style={{width:"100px", textAlign:"center", fontWeight:"600"}}>Score</div>
            </div>
-
+               {choosePage  && (
+                   <div className="page-input-modal" ref={choosePageRef}>
+                       <h2>Enter page number</h2>
+                       <input 
+                           type="number" 
+                           value={goPage} 
+                           onChange={(e)=>setGoPage(e.target.value || "1")}
+                           onKeyDown={(e)=>{
+                               if(e.key==="Enter"){
+                                const pageNum = parseInt(goPage) || 1
+                                   if(pageNum>maxPages){
+                                       pageChange(maxPages);
+                                   }else if(pageNum<1){
+                                       pageChange(1);
+                                   }else{
+                                      pageChange(pageNum); 
+                                   }
+                                   setChoosePage(false);
+                               }
+                           }}
+                       />
+                   </div>
+               )}
            <div className="leaderboard-list">
                {cache[currPage]?.map((item,index)=>(
                    <div key={index} className="leaderboard-item">
@@ -306,31 +328,6 @@ export const Leaderboard = () => {
                        }}>
                        ≫
                    </button>
-               )}
-               
-               {choosePage  && (
-                   <div className="page-input-modal">
-                       <h2>Enter page number</h2>
-                       <input 
-                           type="number" 
-                           value={goPage} 
-                           onChange={(e)=>setGoPage(parseInt(e.target.value) || 1)}
-                           onKeyDown={(e)=>{
-                               if(e.key==="Enter"){
-                                   if(goPage>maxPages){
-                                       setGoPage(maxPages);
-                                       pageChange(maxPages);
-                                   }else if(goPage<1){
-                                       setGoPage(1);
-                                       pageChange(1);
-                                   }else{
-                                      pageChange(goPage); 
-                                   }
-                                   setChoosePage(false);
-                               }
-                           }}
-                       />
-                   </div>
                )}
            </div>
        </div>

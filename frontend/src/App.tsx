@@ -2,7 +2,7 @@ import { useState,useRef} from 'react'
 import {Leaderboard} from '../components/Leaderboard.tsx'
 import SearchBar from '../components/SearchBar.tsx'
 import { Map, type AddMapMarker }from '../components/Map.tsx'
-
+import linkedinicon from './assets/linkedinicon.svg'
 import './App.css'
 
 function App() {
@@ -32,6 +32,9 @@ return (
       padding: '1rem 2rem',
       boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
     }}>
+      <div>
+        <img src={linkedinicon} title="link to my linkedin :)" alt="linkedin" onClick={() => window.open('https://www.linkedin.com/in/james-ma-3b7b71345/','_blank','noopener,noreferrer')} style={{width:'48px',height:'48px',cursor:'pointer'}}/>
+      </div>
     </nav>
 
     <div className='enter-building' style={{

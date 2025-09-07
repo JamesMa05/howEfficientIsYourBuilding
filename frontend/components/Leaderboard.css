@@ -8,6 +8,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position:relative;
 }
 
 .leaderboard .header {
@@ -64,3 +65,19 @@
     border-radius: 0 0 0.75rem 0.75rem;
 }
 
+.page-input-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid #d1d5db;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 250px;
+}
